@@ -1,0 +1,35 @@
+{
+  "name": "del-repos",
+  "description": "批量删除GitHub和Gitee仓库的Chrome扩展",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "preview": "wxt preview",
+    "compile": "vue-tsc --noEmit",
+    "postinstall": "wxt prepare",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.5.0",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.280",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@wxt-dev/module-vue": "^1.0.1",
+    "typescript": "5.6.3",
+    "vue-tsc": "^2.1.10",
+    "wxt": "^0.19.29"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "dtrace-provider",
+      "esbuild",
+      "spawn-sync"
+    ]
+  }
+}
