@@ -59,76 +59,76 @@ defineEmits(['update:currentToken', 'login']);
 </script>
 <style scoped>
 .login-form {
-  background-color: var(--card-bg);
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  max-width: 420px;
-  margin: 0 auto;
-  margin-top: 20px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
+    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .login-form h2 {
-  font-size: 1.1rem;
-  margin-bottom: 12px;
-  color: var(--text-color);
-  text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--text-color);
+    text-align: center;
 }
 
 .token-info {
-  background-color: rgba(255, 75, 145, 0.08);
-  border-radius: 4px;
-  padding: 8px;
-  margin-bottom: 12px;
+    background-color: rgba(255, 75, 145, 0.08);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 12px;
 }
 
 .token-info p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
 .token-info a {
-  color: var(--primary-color);
-  text-decoration: none;
+    color: var(--primary-color);
+    text-decoration: none;
 }
 
 .form-group {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .token-input {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.9rem;
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
 }
 
 .login-button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .login-button:hover {
-  background-color: var(--secondary-color);
+    background-color: var(--secondary-color);
 }
 
 .login-button:disabled {
-  background-color: #b8c1c8;
-  cursor: not-allowed;
+    background-color: #b8c1c8;
+    cursor: not-allowed;
 }
 
 .error-message {
-  color: var(--danger-color);
-  font-size: 0.85rem;
-  margin-top: 6px;
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 6px;
 }
 </style>

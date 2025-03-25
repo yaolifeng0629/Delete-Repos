@@ -8,10 +8,10 @@
  * @param value 要存储的值
  */
 export function saveToStorage<T>(key: string, value: T): Promise<void> {
-  return new Promise((resolve) => {
-    // @ts-ignore - browser全局变量会在运行时被wxt提供
-    browser.storage.local.set({ [key]: value }, resolve);
-  });
+    return new Promise(resolve => {
+        // @ts-ignore - browser全局变量会在运行时被wxt提供
+        browser.storage.local.set({ [key]: value }, resolve);
+    });
 }
 
 /**
@@ -21,12 +21,12 @@ export function saveToStorage<T>(key: string, value: T): Promise<void> {
  * @returns 存储的值或默认值
  */
 export function getFromStorage<T>(key: string, defaultValue: T): Promise<T> {
-  return new Promise((resolve) => {
-    // @ts-ignore - browser全局变量会在运行时被wxt提供
-    browser.storage.local.get([key], (result) => {
-      resolve(result[key] !== undefined ? result[key] : defaultValue);
+    return new Promise(resolve => {
+        // @ts-ignore - browser全局变量会在运行时被wxt提供
+        browser.storage.local.get([key], result => {
+            resolve(result[key] !== undefined ? result[key] : defaultValue);
+        });
     });
-  });
 }
 
 /**
@@ -34,18 +34,18 @@ export function getFromStorage<T>(key: string, defaultValue: T): Promise<T> {
  * @param key 存储键名
  */
 export function removeFromStorage(key: string): Promise<void> {
-  return new Promise((resolve) => {
-    // @ts-ignore - browser全局变量会在运行时被wxt提供
-    browser.storage.local.remove(key, resolve);
-  });
+    return new Promise(resolve => {
+        // @ts-ignore - browser全局变量会在运行时被wxt提供
+        browser.storage.local.remove(key, resolve);
+    });
 }
 
 /**
  * 清除所有本地存储数据
  */
 export function clearStorage(): Promise<void> {
-  return new Promise((resolve) => {
-    // @ts-ignore - browser全局变量会在运行时被wxt提供
-    browser.storage.local.clear(resolve);
-  });
+    return new Promise(resolve => {
+        // @ts-ignore - browser全局变量会在运行时被wxt提供
+        browser.storage.local.clear(resolve);
+    });
 }

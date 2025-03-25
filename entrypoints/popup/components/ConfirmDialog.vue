@@ -65,148 +65,148 @@ defineEmits(['update:confirmText', 'cancel', 'confirm']);
 </script>
 <style scoped>
 .confirm-dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 .confirm-dialog {
-  background-color: white;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 420px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  animation: dialogFadeIn 0.2s ease-out;
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 420px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    animation: dialogFadeIn 0.2s ease-out;
 }
 
 @keyframes dialogFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .confirm-dialog-header {
-  padding: 12px;
-  border-bottom: 1px solid var(--border-color);
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .confirm-dialog-header h2 {
-  font-size: 1.1rem;
-  color: var(--text-color);
-  margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin: 0;
 }
 
 .confirm-dialog-body {
-  padding: 12px;
-  overflow: auto;
-  max-height: 60vh;
+    padding: 12px;
+    overflow: auto;
+    max-height: 60vh;
 }
 
 .warning-text {
-  color: var(--danger-color);
-  font-weight: 500;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+    color: var(--danger-color);
+    font-weight: 500;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .confirm-repos-list {
-  max-height: 120px;
-  overflow: auto;
-  margin: 10px 0;
-  padding: 6px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background-color: var(--bg-color);
+    max-height: 120px;
+    overflow: auto;
+    margin: 10px 0;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
 }
 
 .confirm-repo-item {
-  padding: 3px 6px;
-  font-size: 0.85rem;
+    padding: 3px 6px;
+    font-size: 0.85rem;
 }
 
 .confirm-repo-item:not(:last-child) {
-  border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .confirm-input {
-  margin-top: 12px;
+    margin-top: 12px;
 }
 
 .confirm-input label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.85rem;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
 }
 
 .confirm-input input {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.85rem;
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.85rem;
 }
 
 .confirm-dialog-footer {
-  padding: 12px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
+    padding: 12px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
 }
 
 .cancel-button {
-  padding: 8px 16px;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    padding: 8px 16px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .cancel-button:hover {
-  background-color: var(--hover-bg);
+    background-color: var(--hover-bg);
 }
 
 .confirm-button {
-  padding: 8px 16px;
-  background-color: var(--danger-color);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    padding: 8px 16px;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .confirm-button:hover {
-  background-color: var(--secondary-color);
+    background-color: var(--secondary-color);
 }
 
 .confirm-button:disabled {
-  background-color: #b8c1c8;
-  cursor: not-allowed;
+    background-color: #b8c1c8;
+    cursor: not-allowed;
 }
 </style>

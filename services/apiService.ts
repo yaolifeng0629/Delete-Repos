@@ -4,18 +4,18 @@
 
 // 仓库类型定义
 export interface Repository {
-  id: number;
-  name: string;
-  description: string | null;
-  private: boolean;
-  html_url: string;
-  stargazers_count: number;
-  forks_count: number;
-  updated_at: string;
-  owner: {
-    login: string;
-  };
-  fork: boolean;
+    id: number;
+    name: string;
+    description: string | null;
+    private: boolean;
+    html_url: string;
+    stargazers_count: number;
+    forks_count: number;
+    updated_at: string;
+    owner: {
+        login: string;
+    };
+    fork: boolean;
 }
 
 /**
@@ -24,22 +24,19 @@ export interface Repository {
  * @param token 访问令牌
  * @returns 仓库列表
  */
-export async function getRepositories(
-  platform: string,
-  token: string
-): Promise<Repository[]> {
-  try {
-    if (platform === 'github') {
-      return await getGithubRepositories(token);
-    } else if (platform === 'gitee') {
-      return await getGiteeRepositories(token);
-    } else {
-      throw new Error(`不支持的平台: ${platform}`);
+export async function getRepositories(platform: string, token: string): Promise<Repository[]> {
+    try {
+        if (platform === 'github') {
+            return await getGithubRepositories(token);
+        } else if (platform === 'gitee') {
+            return await getGiteeRepositories(token);
+        } else {
+            throw new Error(`不支持的平台: ${platform}`);
+        }
+    } catch (error) {
+        console.error('获取仓库列表失败:', error);
+        throw error;
     }
-  } catch (error) {
-    console.error('获取仓库列表失败:', error);
-    throw error;
-  }
 }
 
 /**
@@ -49,24 +46,19 @@ export async function getRepositories(
  * @param owner 仓库所有者
  * @param repo 仓库名称
  */
-export async function deleteRepository(
-  platform: string,
-  token: string,
-  owner: string,
-  repo: string
-): Promise<void> {
-  try {
-    if (platform === 'github') {
-      await deleteGithubRepository(token, owner, repo);
-    } else if (platform === 'gitee') {
-      await deleteGiteeRepository(token, owner, repo);
-    } else {
-      throw new Error(`不支持的平台: ${platform}`);
+export async function deleteRepository(platform: string, token: string, owner: string, repo: string): Promise<void> {
+    try {
+        if (platform === 'github') {
+            await deleteGithubRepository(token, owner, repo);
+        } else if (platform === 'gitee') {
+            await deleteGiteeRepository(token, owner, repo);
+        } else {
+            throw new Error(`不支持的平台: ${platform}`);
+        }
+    } catch (error) {
+        console.error(`删除仓库 ${owner}/${repo} 失败:`, error);
+        throw error;
     }
-  } catch (error) {
-    console.error(`删除仓库 ${owner}/${repo} 失败:`, error);
-    throw error;
-  }
 }
 
 /**
@@ -75,39 +67,34 @@ export async function deleteRepository(
  * @returns 仓库列表
  */
 async function getGithubRepositories(token: string): Promise<Repository[]> {
-  // GitHub API每页最多100个仓库
-  const perPage = 100;
-  let page = 1;
-  let allRepos: Repository[] = [];
-  let hasMoreRepos = true;
+    // GitHub API每页最多100个仓库
+    const perPage = 100;
+    let page = 1;
+    let allRepos: Repository[] = [];
+    let hasMoreRepos = true;
 
-  while (hasMoreRepos) {
-    const response = await fetch(
-      `https://api.github.com/user/repos?per_page=${perPage}&page=${page}`,
-      {
-        headers: {
-          Authorization: `token ${token}`,
-          Accept: 'application/vnd.github.v3+json',
-        },
-      }
-    );
+    while (hasMoreRepos) {
+        const response = await fetch(`https://api.github.com/user/repos?per_page=${perPage}&page=${page}`, {
+            headers: {
+                Authorization: `token ${token}`,
+                Accept: 'application/vnd.github.v3+json',
+            },
+        });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(
-        `GitHub API错误 (${response.status}): ${error.message || '未知错误'}`
-      );
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`GitHub API错误 (${response.status}): ${error.message || '未知错误'}`);
+        }
+
+        const repos = await response.json();
+        allRepos = [...allRepos, ...repos];
+
+        // 检查是否还有更多页
+        hasMoreRepos = repos.length === perPage;
+        page++;
     }
 
-    const repos = await response.json();
-    allRepos = [...allRepos, ...repos];
-
-    // 检查是否还有更多页
-    hasMoreRepos = repos.length === perPage;
-    page++;
-  }
-
-  return allRepos;
+    return allRepos;
 }
 
 /**
@@ -116,38 +103,36 @@ async function getGithubRepositories(token: string): Promise<Repository[]> {
  * @returns 仓库列表
  */
 async function getGiteeRepositories(token: string): Promise<Repository[]> {
-  // Gitee API每页最多100个仓库
-  const perPage = 100;
-  let page = 1;
-  let allRepos: Repository[] = [];
-  let hasMoreRepos = true;
+    // Gitee API每页最多100个仓库
+    const perPage = 100;
+    let page = 1;
+    let allRepos: Repository[] = [];
+    let hasMoreRepos = true;
 
-  while (hasMoreRepos) {
-    const response = await fetch(
-      `https://gitee.com/api/v5/user/repos?access_token=${token}&per_page=${perPage}&page=${page}`,
-      {
-        headers: {
-          Accept: 'application/json',
-        },
-      }
-    );
+    while (hasMoreRepos) {
+        const response = await fetch(
+            `https://gitee.com/api/v5/user/repos?access_token=${token}&per_page=${perPage}&page=${page}`,
+            {
+                headers: {
+                    Accept: 'application/json',
+                },
+            }
+        );
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(
-        `Gitee API错误 (${response.status}): ${error.message || '未知错误'}`
-      );
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`Gitee API错误 (${response.status}): ${error.message || '未知错误'}`);
+        }
+
+        const repos = await response.json();
+        allRepos = [...allRepos, ...repos];
+
+        // 检查是否还有更多页
+        hasMoreRepos = repos.length === perPage;
+        page++;
     }
 
-    const repos = await response.json();
-    allRepos = [...allRepos, ...repos];
-
-    // 检查是否还有更多页
-    hasMoreRepos = repos.length === perPage;
-    page++;
-  }
-
-  return allRepos;
+    return allRepos;
 }
 
 /**
@@ -156,58 +141,48 @@ async function getGiteeRepositories(token: string): Promise<Repository[]> {
  * @param owner 仓库所有者
  * @param repo 仓库名称
  */
-async function deleteGithubRepository(
-  token: string,
-  owner: string,
-  repo: string
-): Promise<void> {
-  // 首先获取仓库信息，确认仓库存在
-  const checkResponse = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}`,
-    {
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-    }
-  );
+async function deleteGithubRepository(token: string, owner: string, repo: string): Promise<void> {
+    // 首先获取仓库信息，确认仓库存在
+    const checkResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+        headers: {
+            Authorization: `token ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+        },
+    });
 
-  if (!checkResponse.ok) {
-    let errorMsg = `GitHub API错误 (${checkResponse.status})`;
-    try {
-      const error = await checkResponse.json();
-      errorMsg += `: ${error.message || '未知错误'}`;
-    } catch {
-      // 忽略JSON解析错误
+    if (!checkResponse.ok) {
+        let errorMsg = `GitHub API错误 (${checkResponse.status})`;
+        try {
+            const error = await checkResponse.json();
+            errorMsg += `: ${error.message || '未知错误'}`;
+        } catch {
+            // 忽略JSON解析错误
+        }
+        throw new Error(errorMsg);
     }
-    throw new Error(errorMsg);
-  }
 
-  // 然后执行删除操作
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-    }
-  );
+    // 然后执行删除操作
+    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `token ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+        },
+    });
 
-  if (!response.ok) {
-    // 对于删除操作，GitHub可能返回204 No Content
-    if (response.status !== 204) {
-      let errorMsg = `GitHub API错误 (${response.status})`;
-      try {
-        const error = await response.json();
-        errorMsg += `: ${error.message || '未知错误'}`;
-      } catch {
-        // 忽略JSON解析错误
-      }
-      throw new Error(errorMsg);
+    if (!response.ok) {
+        // 对于删除操作，GitHub可能返回204 No Content
+        if (response.status !== 204) {
+            let errorMsg = `GitHub API错误 (${response.status})`;
+            try {
+                const error = await response.json();
+                errorMsg += `: ${error.message || '未知错误'}`;
+            } catch {
+                // 忽略JSON解析错误
+            }
+            throw new Error(errorMsg);
+        }
     }
-  }
 }
 
 /**
@@ -216,52 +191,42 @@ async function deleteGithubRepository(
  * @param owner 仓库所有者
  * @param repo 仓库名称
  */
-async function deleteGiteeRepository(
-  token: string,
-  owner: string,
-  repo: string
-): Promise<void> {
-  // 首先获取仓库信息，确认仓库存在
-  const checkUrl = `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${token}`;
-  const checkResponse = await fetch(
-    checkUrl,
-    {
-      headers: {
-        Accept: 'application/json',
-      },
-    }
-  );
+async function deleteGiteeRepository(token: string, owner: string, repo: string): Promise<void> {
+    // 首先获取仓库信息，确认仓库存在
+    const checkUrl = `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${token}`;
+    const checkResponse = await fetch(checkUrl, {
+        headers: {
+            Accept: 'application/json',
+        },
+    });
 
-  if (!checkResponse.ok) {
-    let errorMsg = `Gitee API错误 (${checkResponse.status})`;
-    try {
-      const error = await checkResponse.json();
-      errorMsg += `: ${error.message || '未知错误'}`;
-    } catch {
-      // 忽略JSON解析错误
+    if (!checkResponse.ok) {
+        let errorMsg = `Gitee API错误 (${checkResponse.status})`;
+        try {
+            const error = await checkResponse.json();
+            errorMsg += `: ${error.message || '未知错误'}`;
+        } catch {
+            // 忽略JSON解析错误
+        }
+        throw new Error(errorMsg);
     }
-    throw new Error(errorMsg);
-  }
 
-  // 然后执行删除操作
-  const response = await fetch(
-    `https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${token}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-      },
-    }
-  );
+    // 然后执行删除操作
+    const response = await fetch(`https://gitee.com/api/v5/repos/${owner}/${repo}?access_token=${token}`, {
+        method: 'DELETE',
+        headers: {
+            Accept: 'application/json',
+        },
+    });
 
-  if (!response.ok) {
-    let errorMsg = `Gitee API错误 (${response.status})`;
-    try {
-      const error = await response.json();
-      errorMsg += `: ${error.message || '未知错误'}`;
-    } catch {
-      // 忽略JSON解析错误
+    if (!response.ok) {
+        let errorMsg = `Gitee API错误 (${response.status})`;
+        try {
+            const error = await response.json();
+            errorMsg += `: ${error.message || '未知错误'}`;
+        } catch {
+            // 忽略JSON解析错误
+        }
+        throw new Error(errorMsg);
     }
-    throw new Error(errorMsg);
-  }
 }
