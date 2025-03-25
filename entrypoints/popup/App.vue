@@ -163,6 +163,12 @@ const login = async () => {
   } catch (error) {
     loginError.value = `登录失败: ${error.message}`;
     console.error('Login error:', error);
+    // 登录失败时清除token
+    if (platform.value === 'github') {
+      githubToken.value = '';
+    } else {
+      giteeToken.value = '';
+    }
   } finally {
     loading.value = false;
   }
@@ -207,6 +213,8 @@ const executeDelete = async () => {
   if (confirmText.value !== 'confirm delete') return;
 
   deleting.value = true;
+  loading.value = true; // 添加全局loading状态
+  showConfirmDialog.value = false; // 关闭确认对话框，显示全局loading
   deleteResults.value = {
     success: [],
     failed: []
@@ -217,6 +225,11 @@ const executeDelete = async () => {
       const repo = getRepoById(repoId);
       try {
         await deleteRepository(platform.value, currentToken.value, repo.owner.login, repo.name);
+        // 从本地列表中移除已删除的仓库
+        const index = repos.value.findIndex(r => r.id === repoId);
+        if (index !== -1) {
+          repos.value.splice(index, 1);
+        }
         deleteResults.value.success.push(repo.name);
       } catch (error) {
         console.error(`Failed to delete ${repo.name}:`, error);
@@ -224,7 +237,7 @@ const executeDelete = async () => {
       }
     }
 
-    // 重新获取仓库列表
+    // 重新获取仓库列表以确保同步
     await loadRepositories();
     selectedRepos.value = [];
 
@@ -232,7 +245,7 @@ const executeDelete = async () => {
     console.error('Delete operation error:', error);
   } finally {
     deleting.value = false;
-    showConfirmDialog.value = false;
+    loading.value = false; // 删除操作完成后，关闭loading状态
   }
 };
 
