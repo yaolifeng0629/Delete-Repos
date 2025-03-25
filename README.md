@@ -1,4 +1,4 @@
-# Del Repos - 批量删除GitHub/Gitee仓库的Chrome扩展
+# Delete Repos - 批量删除GitHub/Gitee仓库的Chrome扩展
 
 <p align="center">中文 | <a href="./README.en.md">English</a></p>
 
@@ -6,7 +6,7 @@
 
 ## ✨ 简介
 
-`Del Repos`是一个Chrome浏览器扩展，用于批量删除GitHub或Gitee平台上的仓库。它提供了直观的用户界面，让您可以轻松地选择和删除多个仓库。
+`Delete Repos`是一个Chrome浏览器扩展，用于批量删除GitHub或Gitee平台上的仓库。它提供了直观的用户界面，让您可以轻松地选择和删除多个仓库。
 
 ## 🛠️ 功能特点
 
@@ -22,7 +22,7 @@
 ### 从Chrome网上应用店安装
 
 1. 访问[Chrome网上应用店](https://chrome.google.com/webstore/category/extensions)（即将上线）
-2. 搜索"Del Repos"
+2. 搜索"Delete Repos"
 3. 点击"添加到Chrome"
 
 ### 手动安装
@@ -34,7 +34,7 @@
 
 ## 🌟 使用方法
 
-1. 点击浏览器工具栏中的Del Repos图标
+1. 点击浏览器工具栏中的Delete Repos图标
 2. 选择平台（GitHub或Gitee）
 3. 输入对应平台的访问令牌（Token）
    - 对于GitHub，可以在[这里](https://github.com/settings/tokens)创建

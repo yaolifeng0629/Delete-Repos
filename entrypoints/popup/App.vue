@@ -55,6 +55,7 @@
 import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useStorage } from '@vueuse/core';
 import { getRepositories, deleteRepository } from '../../services/apiService';
+import { setStorageWithExpiry, getStorageWithExpiry } from '../../utils/storage';
 
 // 异步加载组件以提高性能
 const TheHeader = defineAsyncComponent(() => import('./components/TheHeader.vue'));
@@ -64,8 +65,8 @@ const ConfirmDialog = defineAsyncComponent(() => import('./components/ConfirmDia
 
 // 状态管理
 const platform = useStorage('del-repos-platform', 'github');
-const githubToken = useStorage('del-repos-github-token', '');
-const giteeToken = useStorage('del-repos-gitee-token', '');
+const githubToken = ref('');
+const giteeToken = ref('');
 
 // 计算属性创建双向绑定的token
 const currentToken = computed({
@@ -76,8 +77,14 @@ const currentToken = computed({
 const updateToken = newValue => {
     if (platform.value === 'github') {
         githubToken.value = newValue;
+        if (newValue) {
+            setStorageWithExpiry('del-repos-github-token', newValue, 30 * 24 * 60 * 60 * 1000); // 30天
+        }
     } else {
         giteeToken.value = newValue;
+        if (newValue) {
+            setStorageWithExpiry('del-repos-gitee-token', newValue, 30 * 24 * 60 * 60 * 1000); // 30天
+        }
     }
 };
 
@@ -162,17 +169,20 @@ const login = async () => {
         repos.value = fetchedRepos;
         if (platform.value === 'github') {
             githubLoggedIn.value = true;
+            setStorageWithExpiry('del-repos-github-token', currentToken.value, 30 * 24 * 60 * 60 * 1000); // 30天
         } else {
             giteeLoggedIn.value = true;
+            setStorageWithExpiry('del-repos-gitee-token', currentToken.value, 30 * 24 * 60 * 60 * 1000); // 30天
         }
     } catch (error) {
         loginError.value = `登录失败: ${error.message}`;
         console.error('Login error:', error);
-        // 登录失败时清除token
         if (platform.value === 'github') {
             githubToken.value = '';
+            localStorage.removeItem('del-repos-github-token');
         } else {
             giteeToken.value = '';
+            localStorage.removeItem('del-repos-gitee-token');
         }
     } finally {
         loading.value = false;
@@ -183,9 +193,11 @@ const logout = () => {
     if (platform.value === 'github') {
         githubLoggedIn.value = false;
         githubToken.value = '';
+        localStorage.removeItem('del-repos-github-token');
     } else {
         giteeLoggedIn.value = false;
         giteeToken.value = '';
+        localStorage.removeItem('del-repos-gitee-token');
     }
     repos.value = [];
     selectedRepos.value = [];
@@ -255,26 +267,35 @@ const executeDelete = async () => {
 
 // 生命周期钩子
 onMounted(async () => {
-    // 自动登录
+    const savedGithubToken = getStorageWithExpiry('del-repos-github-token');
+    const savedGiteeToken = getStorageWithExpiry('del-repos-gitee-token');
+
+    if (savedGithubToken) {
+        githubToken.value = savedGithubToken;
+    }
+
+    if (savedGiteeToken) {
+        giteeToken.value = savedGiteeToken;
+    }
+
     if (githubToken.value) {
         try {
             loading.value = true;
             platform.value = 'github';
             const fetchedRepos = await getRepositories('github', githubToken.value);
             if (platform.value === 'github') {
-                // 如果用户没有切换平台
                 repos.value = fetchedRepos;
                 githubLoggedIn.value = true;
             }
         } catch (error) {
             console.error('GitHub Auto login error:', error);
-            // 自动登录失败不显示错误，只是不登录
+            githubToken.value = '';
+            localStorage.removeItem('del-repos-github-token');
         } finally {
             loading.value = false;
         }
     }
 
-    // 如果当前没有显示仓库且有Gitee令牌，则尝试登录Gitee
     if (repos.value.length === 0 && giteeToken.value) {
         try {
             loading.value = true;
@@ -284,6 +305,8 @@ onMounted(async () => {
             giteeLoggedIn.value = true;
         } catch (error) {
             console.error('Gitee Auto login error:', error);
+            giteeToken.value = '';
+            localStorage.removeItem('del-repos-gitee-token');
         } finally {
             loading.value = false;
         }

@@ -1,8 +1,8 @@
 <template>
     <header class="header">
         <div class="logo">
-            <img src="/icons/icon-128.png" alt="Del Repos" />
-            <h1> Del Repos </h1>
+            <img src="/icons/icon-128.png" alt="Delete Repos" />
+            <h1> Delete Repos </h1>
         </div>
         <div class="platform-selector">
             <button :class="{ active: platform === 'github' }" @click="$emit('changePlatform', 'github')">

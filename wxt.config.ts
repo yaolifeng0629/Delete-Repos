@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     manifest: {
-        name: 'Del Repos',
+        name: 'Delete Repos',
         description: '批量删除GitHub和Gitee仓库的Chrome扩展',
         version: '1.0.0',
         permissions: ['storage'],
@@ -22,8 +22,29 @@ export default defineConfig({
             '48': 'icons/icon-48.png',
             '128': 'icons/icon-128.png',
         },
+        web_accessible_resources: [
+            {
+                resources: ['icons/*', 'entrypoints/popup/*'],
+                matches: ['<all_urls>']
+            }
+        ],
     },
     vite: () => ({
         plugins: [vue()],
+        build: {
+            target: 'esnext',
+            minify: true,
+            cssCodeSplit: false,
+            rollupOptions: {
+                output: {
+                    manualChunks: undefined
+                }
+            }
+        },
+        server: {
+            hmr: {
+                overlay: false
+            }
+        }
     }),
 });
