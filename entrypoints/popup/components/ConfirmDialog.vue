@@ -202,7 +202,7 @@ defineEmits(['update:confirmText', 'cancel', 'confirm']);
 }
 
 .confirm-button:hover {
-  background-color: #d32f2f;
+  background-color: var(--secondary-color);
 }
 
 .confirm-button:disabled {

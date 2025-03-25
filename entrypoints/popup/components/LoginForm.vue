@@ -7,8 +7,8 @@
                 <a
                     :href="
                         platform === 'github'
-                            ? 'https://github.com/settings/tokens'
-                            : 'https://gitee.com/profile/personal_access_tokens'
+                            ? 'https://github.com/settings/tokens/new?scopes=delete_repo,project,repo&description=deleteRepos'
+                            : 'https://gitee.com/profile/personal_access_tokens/new'
                     "
                     target="_blank"
                     >这里</a
@@ -76,7 +76,7 @@ defineEmits(['update:currentToken', 'login']);
 }
 
 .token-info {
-  background-color: rgba(66, 133, 244, 0.08);
+  background-color: rgba(255, 75, 145, 0.08);
   border-radius: 4px;
   padding: 8px;
   margin-bottom: 12px;

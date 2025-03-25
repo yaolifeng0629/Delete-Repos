@@ -411,7 +411,7 @@ const formatDate = dateString => {
 }
 
 .delete-button:hover {
-  background-color: #d32f2f;
+  background-color: var(--secondary-color);
 }
 
 .delete-button:disabled {
