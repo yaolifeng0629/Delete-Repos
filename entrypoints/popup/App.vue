@@ -5,6 +5,7 @@
             :githubLoggedIn="githubLoggedIn"
             :giteeLoggedIn="giteeLoggedIn"
             @changePlatform="changePlatform"
+            @openSettings="showSettings = true"
         />
 
         <main class="main-content">
@@ -35,6 +36,17 @@
                 @logout="logout"
                 @confirmDelete="confirmDelete"
             />
+
+            <!-- 设置面板 -->
+            <div v-if="showSettings" class="settings-overlay">
+                <SettingsPanel
+                    :githubToken="githubToken"
+                    :giteeToken="giteeToken"
+                    @update:githubToken="updateGithubToken"
+                    @update:giteeToken="updateGiteeToken"
+                    @close="showSettings = false"
+                />
+            </div>
         </main>
 
         <!-- 确认对话框 -->
@@ -56,12 +68,14 @@ import { ref, computed, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useStorage } from '@vueuse/core';
 import { getRepositories, deleteRepository } from '../../services/apiService';
 import { setStorageWithExpiry, getStorageWithExpiry } from '../../utils/storage';
+import { initializeLanguage } from '../../utils/i18n';
 
 // 异步加载组件以提高性能
 const TheHeader = defineAsyncComponent(() => import('./components/TheHeader.vue'));
 const LoginForm = defineAsyncComponent(() => import('./components/LoginForm.vue'));
 const RepositoryList = defineAsyncComponent(() => import('./components/RepositoryList.vue'));
 const ConfirmDialog = defineAsyncComponent(() => import('./components/ConfirmDialog.vue'));
+const SettingsPanel = defineAsyncComponent(() => import('./components/SettingsPanel.vue'));
 
 // 状态管理
 const platform = useStorage('del-repos-platform', 'github');
@@ -88,6 +102,15 @@ const updateToken = newValue => {
     }
 };
 
+// 专门用于从设置面板更新令牌
+const updateGithubToken = (newToken) => {
+    githubToken.value = newToken;
+};
+
+const updateGiteeToken = (newToken) => {
+    giteeToken.value = newToken;
+};
+
 const githubLoggedIn = ref(false);
 const giteeLoggedIn = ref(false);
 const isLoggedIn = computed(() => (platform.value === 'github' ? githubLoggedIn.value : giteeLoggedIn.value));
@@ -104,6 +127,7 @@ const deleteResults = ref({
     success: [],
     failed: [],
 });
+const showSettings = ref(false);
 
 // 计算属性
 const filteredRepos = computed(() => {
@@ -311,6 +335,9 @@ onMounted(async () => {
             loading.value = false;
         }
     }
+
+    // 初始化语言设置
+    await initializeLanguage();
 });
 </script>
 
@@ -346,11 +373,11 @@ body {
 }
 
 .popup-container {
-    width: 500px;
+    width: 600px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    height: 580px;
+    height: 600px;
     position: relative;
 }
 
@@ -375,5 +402,20 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* 设置弹出层样式 */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
 }
 </style>

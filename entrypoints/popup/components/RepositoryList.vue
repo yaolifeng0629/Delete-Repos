@@ -6,7 +6,7 @@
                     type="text"
                     :value="searchQuery"
                     @input="$emit('update:searchQuery', $event.target.value)"
-                    placeholder="搜索仓库..."
+                    :placeholder="t('searchRepos')"
                     class="search-input"
                 />
                 <select
@@ -14,13 +14,13 @@
                     @change="$emit('update:repoType', $event.target.value)"
                     class="repo-type-select"
                 >
-                    <option value="all">所有仓库</option>
-                    <option value="owner">我的仓库</option>
+                    <option value="all">{{ t('allRepos') }}</option>
+                    <option value="owner">{{ t('myRepos') }}</option>
                 </select>
             </div>
             <div class="selection-tools">
-                <button @click="$emit('selectAll')" class="tool-button">全选</button>
-                <button @click="$emit('deselectAll')" class="tool-button">取消全选</button>
+                <button @click="$emit('selectAll')" class="tool-button">{{ t('selectAll') }}</button>
+                <button @click="$emit('deselectAll')" class="tool-button">{{ t('deselectAll') }}</button>
                 <button @click="$emit('logout')" class="tool-button logout-button">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -28,17 +28,17 @@
         </div>
 
         <div class="repos-stats"
-            >共找到 <span class="repos-count">{{ repos.length }}</span> 个仓库</div
+            >{{ t('foundRepos', { count: repos.length }) }}</div
         >
 
         <div v-if="loading" class="loading">
             <i class="fas fa-spinner fa-spin"></i>
-            <span>正在加载仓库...</span>
+            <span>{{ t('loadingRepos') }}</span>
         </div>
 
         <div v-else-if="repos.length === 0" class="no-repos">
             <i class="fas fa-folder-open"></i>
-            <span>没有找到仓库</span>
+            <span>{{ t('noRepos') }}</span>
         </div>
 
         <div v-else class="repos-list">
@@ -63,11 +63,11 @@
                             <i class="fas fa-external-link-alt"></i>
                         </a>
                     </label>
-                    <div class="repo-desc">{{ repo.description || '没有描述' }}</div>
+                    <div class="repo-desc">{{ repo.description || t('noDescription') }}</div>
                     <div class="repo-meta">
                         <span class="repo-visibility" :class="repo.private ? 'private' : 'public'">
                             <i :class="repo.private ? 'fas fa-lock' : 'fas fa-globe'"></i>
-                            {{ repo.private ? '私有' : '公开' }}
+                            {{ repo.private ? t('private') : t('public') }}
                         </span>
                         <span class="repo-stars">
                             <i class="fas fa-star"></i>
@@ -79,7 +79,7 @@
                         </span>
                         <span class="repo-updated">
                             <i class="fas fa-clock"></i>
-                            更新于 {{ formatDate(repo.updated_at) }}
+                            {{ t('updatedAt', { date: formatDate(repo.updated_at) }) }}
                         </span>
                     </div>
                 </div>
@@ -87,10 +87,10 @@
         </div>
 
         <div class="action-bar">
-            <div class="selection-info"> 已选择 {{ selectedRepos.length }} 个仓库 </div>
+            <div class="selection-info">{{ t('selectedCount', { count: selectedRepos.length }) }}</div>
             <button @click="$emit('confirmDelete')" class="delete-button" :disabled="selectedRepos.length === 0">
                 <i class="fas fa-trash-alt"></i>
-                删除选定仓库
+                {{ t('deleteSelected') }}
             </button>
         </div>
     </div>
@@ -98,6 +98,9 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import { useTranslation } from '../../../utils/i18n';
+
+const { t, currentLanguage } = useTranslation();
 
 const props = defineProps({
     loading: {
@@ -151,7 +154,7 @@ const updateSelection = (repoId, isChecked) => {
 // 格式化日期
 const formatDate = dateString => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString(currentLanguage.value === 'zh' ? 'zh-CN' : 'en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',

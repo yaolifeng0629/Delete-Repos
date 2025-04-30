@@ -2,22 +2,31 @@
     <header class="header">
         <div class="logo">
             <img src="/icons/icon-128.png" alt="Delete Repos" />
-            <h1> Delete Repos </h1>
+            <h1>{{ t('appName') }}</h1>
         </div>
-        <div class="platform-selector">
-            <button :class="{ active: platform === 'github' }" @click="$emit('changePlatform', 'github')">
-                <i class="fab fa-github"></i> GitHub
-                <i v-if="githubLoggedIn" class="fas fa-check status-icon"></i>
-            </button>
-            <button :class="{ active: platform === 'gitee' }" @click="$emit('changePlatform', 'gitee')">
-                <i class="fab fa-git-alt"></i> Gitee
-                <i v-if="giteeLoggedIn" class="fas fa-check status-icon"></i>
+        <div class="actions">
+            <div class="platform-selector">
+                <button :class="{ active: platform === 'github' }" @click="$emit('changePlatform', 'github')">
+                    <i class="fab fa-github"></i> GitHub
+                    <i v-if="githubLoggedIn" class="fas fa-check status-icon"></i>
+                </button>
+                <button :class="{ active: platform === 'gitee' }" @click="$emit('changePlatform', 'gitee')">
+                    <i class="fab fa-git-alt"></i> Gitee
+                    <i v-if="giteeLoggedIn" class="fas fa-check status-icon"></i>
+                </button>
+            </div>
+            <button class="settings-button" @click="$emit('openSettings')">
+                <i class="fas fa-cog"></i>
             </button>
         </div>
     </header>
 </template>
 
 <script setup>
+import { useTranslation } from '../../../utils/i18n';
+
+const { t } = useTranslation();
+
 defineProps({
     platform: {
         type: String,
@@ -33,7 +42,7 @@ defineProps({
     },
 });
 
-defineEmits(['changePlatform']);
+defineEmits(['changePlatform', 'openSettings']);
 </script>
 <style scoped>
 .header {
@@ -61,6 +70,12 @@ defineEmits(['changePlatform']);
     font-size: 1.3rem;
     margin: 0;
     font-weight: 500;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .platform-selector {
@@ -96,5 +111,23 @@ defineEmits(['changePlatform']);
     color: #4cd964;
     font-size: 0.7rem;
     margin-left: 4px;
+}
+
+.settings-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-button:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 </style>

@@ -2,21 +2,21 @@
     <div class="confirm-dialog-overlay">
         <div class="confirm-dialog">
             <div class="confirm-dialog-header">
-                <h2>确认删除</h2>
+                <h2>{{ t('confirmDelete') }}</h2>
             </div>
             <div class="confirm-dialog-body">
                 <p class="warning-text">
                     <i class="fas fa-exclamation-triangle"></i>
-                    警告：此操作无法撤销！
+                    {{ t('warning') }}
                 </p>
-                <p>您确定要删除以下 {{ selectedRepos.length }} 个仓库吗？</p>
+                <p>{{ t('confirmDeleteRepos', { count: selectedRepos.length }) }}</p>
                 <div class="confirm-repos-list">
                     <div v-for="repoId in selectedRepos" :key="repoId" class="confirm-repo-item">
                         {{ getRepoById(repoId).name }}
                     </div>
                 </div>
                 <div class="confirm-input">
-                    <label for="confirm-text">请输入 "confirm delete" 以确认操作：</label>
+                    <label for="confirm-text">{{ t('typeConfirm') }}</label>
                     <input
                         type="text"
                         id="confirm-text"
@@ -27,14 +27,14 @@
                 </div>
             </div>
             <div class="confirm-dialog-footer">
-                <button @click="$emit('cancel')" class="cancel-button">取消</button>
+                <button @click="$emit('cancel')" class="cancel-button">{{ t('cancel') }}</button>
                 <button
                     @click="$emit('confirm')"
                     class="confirm-button"
                     :disabled="confirmText !== 'confirm delete' || deleting"
                 >
                     <i v-if="deleting" class="fas fa-spinner fa-spin"></i>
-                    <span v-else>确认删除</span>
+                    <span v-else>{{ t('confirm') }}</span>
                 </button>
             </div>
         </div>
@@ -42,6 +42,10 @@
 </template>
 
 <script setup>
+import { useTranslation } from '../../../utils/i18n';
+
+const { t } = useTranslation();
+
 const props = defineProps({
     selectedRepos: {
         type: Array,

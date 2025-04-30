@@ -1,9 +1,9 @@
 <template>
     <div class="login-form">
-        <h2>请输入{{ platform === 'github' ? 'GitHub' : 'Gitee' }}的访问令牌</h2>
+        <h2>{{ t('enterToken', { platform: platform === 'github' ? 'GitHub' : 'Gitee' }) }}</h2>
         <div class="token-info">
             <p>
-                您可以在
+                {{ t('createTokenHere') }}
                 <a
                     :href="
                         platform === 'github'
@@ -11,9 +11,8 @@
                             : 'https://gitee.com/profile/personal_access_tokens/new'
                     "
                     target="_blank"
-                    >这里</a
+                    >{{ t('createTokenHere') }}</a
                 >
-                创建访问令牌
             </p>
         </div>
         <div class="form-group">
@@ -21,13 +20,13 @@
                 type="password"
                 :value="currentToken"
                 @input="$emit('update:currentToken', $event.target.value)"
-                placeholder="输入Token..."
+                :placeholder="t('inputToken')"
                 class="token-input"
                 :disabled="loading"
             />
             <button @click="$emit('login')" class="login-button" :disabled="loading">
                 <i v-if="loading" class="fas fa-spinner fa-spin"></i>
-                <span v-else>登录</span>
+                <span v-else>{{ t('login') }}</span>
             </button>
         </div>
         <div v-if="loginError" class="error-message">
@@ -37,13 +36,17 @@
         <div v-if="loading" class="global-loading">
             <div class="loading-spinner">
                 <i class="fas fa-spinner fa-spin"></i>
-                <span>正在登录...</span>
+                <span>{{ t('loggingIn') }}</span>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { useTranslation } from '../../../utils/i18n';
+
+const { t } = useTranslation();
+
 defineProps({
     platform: {
         type: String,
