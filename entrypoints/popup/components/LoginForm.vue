@@ -25,7 +25,9 @@
                 :disabled="loading"
             />
             <button @click="$emit('login')" class="login-button" :disabled="loading">
-                <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+                <div v-if="loading" class="flower-loader flower-loader-sm">
+                    <div v-for="n in 8" :key="n" class="petal"></div>
+                </div>
                 <span v-else>{{ t('login') }}</span>
             </button>
         </div>
@@ -35,7 +37,9 @@
 
         <div v-if="loading" class="global-loading">
             <div class="loading-spinner">
-                <i class="fas fa-spinner fa-spin"></i>
+                <div class="flower-loader">
+                    <div v-for="n in 12" :key="n" class="petal"></div>
+                </div>
                 <span>{{ t('loggingIn') }}</span>
             </div>
         </div>
@@ -126,6 +130,10 @@ defineEmits(['update:currentToken', 'login']);
     font-size: 0.9rem;
     cursor: pointer;
     transition: background-color 0.2s;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-button:hover {
@@ -135,6 +143,72 @@ defineEmits(['update:currentToken', 'login']);
 .login-button:disabled {
     background-color: #b8c1c8;
     cursor: not-allowed;
+}
+
+/* 菊花加载动画 */
+.flower-loader {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.flower-loader-sm {
+    width: 20px;
+    height: 20px;
+}
+
+.flower-loader .petal {
+    position: absolute;
+    width: 10%;
+    height: 30%;
+    background-color: currentColor;
+    top: 0;
+    left: 45%;
+    border-radius: 50px;
+    transform-origin: center bottom;
+    animation: spin 1.2s linear infinite;
+}
+
+.flower-loader-sm .petal {
+    height: 20%;
+}
+
+/* 根据花瓣数量计算旋转角度 */
+.flower-loader .petal:nth-child(1) { transform: rotate(0deg); }
+.flower-loader .petal:nth-child(2) { transform: rotate(30deg); }
+.flower-loader .petal:nth-child(3) { transform: rotate(60deg); }
+.flower-loader .petal:nth-child(4) { transform: rotate(90deg); }
+.flower-loader .petal:nth-child(5) { transform: rotate(120deg); }
+.flower-loader .petal:nth-child(6) { transform: rotate(150deg); }
+.flower-loader .petal:nth-child(7) { transform: rotate(180deg); }
+.flower-loader .petal:nth-child(8) { transform: rotate(210deg); }
+.flower-loader .petal:nth-child(9) { transform: rotate(240deg); }
+.flower-loader .petal:nth-child(10) { transform: rotate(270deg); }
+.flower-loader .petal:nth-child(11) { transform: rotate(300deg); }
+.flower-loader .petal:nth-child(12) { transform: rotate(330deg); }
+
+/* 菊花花瓣动画 */
+@keyframes spin {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.15;
+    }
+}
+
+/* 菊花整体旋转 */
+.flower-loader {
+    animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .error-message {
@@ -155,6 +229,7 @@ defineEmits(['update:currentToken', 'login']);
     align-items: center;
     z-index: 50;
     border-radius: 8px;
+    backdrop-filter: blur(2px);
 }
 
 .loading-spinner {
@@ -165,11 +240,8 @@ defineEmits(['update:currentToken', 'login']);
     color: var(--primary-color);
 }
 
-.loading-spinner i {
-    font-size: 2rem;
-}
-
 .loading-spinner span {
     font-size: 1rem;
+    font-weight: 500;
 }
 </style>
